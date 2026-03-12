@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LabInfo OS - Professional Edition</title>
+  <title>LabInfo OS - Sincronizado</title>
   <style>
       :root {
           --primary: #00d4ff; --secondary: #0055ff; --dark: #020617;
@@ -11,15 +11,15 @@
           --danger: #ef4444; --warning: #f59e0b;
       }
 
-      body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); overflow: hidden; }
+      body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); overflow-x: hidden; }
       .hidden { display: none !important; }
       .glass { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
 
-      /* Estilos de Interface */
-      .navbar { height: 60px; display: flex; justify-content: space-between; padding: 0 30px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--primary); align-items: center; }
-      .main-container { display: flex; height: calc(100vh - 60px); }
-      .sidebar { width: 260px; padding: 20px; border-right: 1px solid rgba(255,255,255,0.1); overflow-y: auto; }
-      .content { flex: 1; padding: 30px; overflow-y: auto; }
+      /* Interface */
+      .navbar { height: 60px; display: flex; justify-content: space-between; padding: 0 30px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--primary); align-items: center; position: sticky; top: 0; z-index: 100; }
+      .main-container { display: flex; min-height: calc(100vh - 60px); }
+      .sidebar { width: 260px; padding: 20px; border-right: 1px solid rgba(255,255,255,0.1); }
+      .content { flex: 1; padding: 30px; }
 
       .menu-item { padding: 12px 15px; cursor: pointer; border-radius: 8px; margin-bottom: 8px; color: #94a3b8; transition: 0.3s; }
       .menu-item:hover { background: rgba(0, 212, 255, 0.1); color: var(--primary); }
@@ -31,13 +31,13 @@
       td { padding: 12px; border-bottom: 1px solid #1e293b; }
 
       input, select, textarea { background: #020617; color: white; border: 1px solid #334155; padding: 12px; border-radius: 6px; width: 100%; margin-bottom: 10px; box-sizing: border-box; }
-      .btn { padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.8rem; }
+      .btn { padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.8rem; }
       .btn-primary { background: var(--primary); color: #020617; }
       .btn-danger { background: var(--danger); color: white; }
       .btn-pdf { background: #5865f2; color: white; margin-bottom: 15px; }
 
-      /* PCs */
-      .pc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+      /* Grade de PCs */
+      .pc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
       .pc-item { padding: 20px; text-align: center; border: 2px solid #334155; border-radius: 12px; cursor: pointer; background: rgba(255,255,255,0.02); }
       .pc-item.free { border-color: var(--success); }
       .pc-item.busy { border-color: var(--warning); background: rgba(245, 158, 11, 0.1); }
@@ -50,66 +50,24 @@
       .p-bg { background: var(--success); } .f-bg { background: var(--danger); } .fj-bg { background: var(--warning); color: #000; }
 
       /* Login */
-      .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1e293b 0%, #020617 100%); position: fixed; width: 100%; z-index: 9999; }
+      .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1e293b 0%, #020617 100%); position: fixed; width: 100%; z-index: 9999; top:0; left:0;}
       .login-card { padding: 40px; width: 380px; text-align: center; border-bottom: 4px solid var(--primary); }
 
-      /* CONFIGURAÇÃO DE IMPRESSÃO (PDF) - MELHORADA */
-      /* ADAPTAÇÃO PARA CELULAR (SEM MUDAR O CÓDIGO PRINCIPAL) */
+      /* Responsividade Celular */
       @media (max-width: 768px) {
-          .main-container {
-              flex-direction: column; /* Coloca o menu em cima e o conteúdo embaixo */
-              overflow-y: auto;
-          }
-          .sidebar {
-              width: 100%;
-              height: auto;
-              padding: 10px;
-              display: flex;
-              flex-wrap: wrap; /* Itens do menu um ao lado do outro */
-              gap: 5px;
-              border-right: none;
-              border-bottom: 1px solid rgba(255,255,255,0.1);
-              box-sizing: border-box;
-          }
-          .menu-item {
-              flex: 1 1 auto; /* Ajusta o tamanho dos botões do menu */
-              margin-bottom: 0;
-              padding: 8px 10px;
-              text-align: center;
-              font-size: 0.75rem;
-          }
-          .content {
-              padding: 15px;
-          }
-          .pc-grid {
-              grid-template-columns: repeat(2, 1fr); /* No celular, apenas 2 PCs por linha */
-          }
-          /* Faz as tabelas terem barra de rolagem lateral para não quebrar o layout */
-          table {
-              display: block;
-              overflow-x: auto;
-              white-space: nowrap;
-          }
-          .card {
-              padding: 15px;
-          }
+          .main-container { flex-direction: column; }
+          .sidebar { width: 100%; height: auto; display: flex; flex-wrap: wrap; gap: 5px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+          .menu-item { flex: 1 1 45%; margin-bottom: 0; text-align: center; font-size: 0.75rem; }
+          .pc-grid { grid-template-columns: repeat(2, 1fr); }
+          table { display: block; overflow-x: auto; white-space: nowrap; }
       }
+
+      /* Impressão */
       @media print {
-          body { background: white !important; color: black !important; overflow: visible !important; }
-          .no-print, .sidebar, .navbar, .btn, .btn-primary, .btn-danger, input, select { display: none !important; }
-          .content { padding: 0 !important; margin: 0 !important; width: 100% !important; }
-          /* Garante que abas ocultas que contém dados do aluno apareçam na impressão */
-          .tab-view { display: block !important; }
-          .hidden:not(.print-visible) { display: none !important; }
-          .print-visible { display: block !important; }
-          .glass { background: transparent !important; border: 1px solid #ccc !important; box-shadow: none !important; }
-          table { border: 1px solid black !important; margin-bottom: 20px; }
-          th { background: #eee !important; color: black !important; border: 1px solid black !important; }
-          td { border: 1px solid black !important; color: black !important; }
-          .month-box { border: 1px solid black !important; background: white !important; color: black !important; }
-          .wk-btn { border: 1px solid #ccc !important; }
-          h2, h3 { color: black !important; text-align: center; margin-bottom: 20px; }
-          .card { page-break-inside: avoid; border: 1px solid #000 !important; margin-bottom: 30px !important; }
+          .no-print, .sidebar, .navbar, .btn, input, select { display: none !important; }
+          body { background: white !important; color: black !important; }
+          .content { padding: 0 !important; width: 100% !important; }
+          .card { border: 1px solid #000 !important; page-break-inside: avoid; }
       }
   </style>
 </head>
@@ -142,61 +100,39 @@
     <div id="tab-dash" class="tab-view">
       <h2 class="no-print">🛰️ Dashboard</h2>
       <div class="card glass no-print" id="mural-view" style="border-left: 5px solid var(--warning); text-align: center; font-weight: bold; font-size: 1.1rem;">---</div>
-      <div class="no-print" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;">
+      <div class="no-print" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-top: 20px;">
         <div class="card glass"><h4>Alunos</h4><h2 id="st-alunos">0</h2></div>
         <div class="card glass"><h4>PCs Livres</h4><h2 id="st-pcs">0/8</h2></div>
         <div class="card glass"><h4>Formados</h4><h2 id="st-form">0</h2></div>
-      </div>
-      <div class="card glass no-print">
-        <h3>📚 Cursos Disponíveis</h3>
-        <div id="vitrine-area" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
       </div>
     </div>
 
     <div id="tab-matricula" class="tab-view hidden">
       <div class="card glass no-print">
         <h3>📝 Nova Matrícula</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
           <input type="text" id="m-nome" placeholder="Nome Completo">
           <input type="text" id="m-curso" placeholder="Curso">
           <input type="text" id="m-user" placeholder="Login">
           <input type="text" id="m-pass" placeholder="Senha" value="123">
           <input type="text" id="m-tel" placeholder="Telefone">
           <input type="text" id="m-resp" placeholder="Responsável">
-          <input type="text" id="m-end" placeholder="Endereço Completo" style="grid-column: span 2;">
         </div>
-        <button class="btn btn-primary" onclick="cadastrarAluno()">MATRICULAR</button>
-      </div>
-
-      <div class="card glass no-print">
-        <h3>📢 Editar Mural do Dashboard</h3>
-        <div style="display: flex; gap: 10px;">
-          <input type="text" id="edit-mural-input" placeholder="Digite a nova mensagem do Dashboard...">
-          <button class="btn btn-primary" onclick="atualizarMural()">ATUALIZAR MURAL</button>
-        </div>
+        <button class="btn btn-primary" style="margin-top:10px" onclick="cadastrarAluno()">MATRICULAR</button>
       </div>
 
       <div class="card glass">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3>📋 Relatório Detalhado (Matrícula + Frequência + Notas)</h3>
-          <button class="btn btn-pdf no-print" onclick="window.print()">📥 Baixar PDF / Imprimir</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <h3>📋 Alunos Ativos</h3>
+          <button class="btn btn-pdf no-print" onclick="window.print()">📥 Imprimir Relatório</button>
         </div>
-        <table id="table-print">
+        <table>
           <thead>
-          <tr>
-            <th>Aluno</th>
-            <th>Curso</th>
-            <th>Telefone</th>
-            <th>Responsável</th>
-            <th>Nota Final</th>
-            <th class="no-print">Login/Senha</th>
-            <th class="no-print">Ações</th>
-          </tr>
+            <tr><th>Aluno</th><th>Curso</th><th>Telefone</th><th>Nota</th><th class="no-print">Ações</th></tr>
           </thead>
           <tbody id="list-alunos"></tbody>
         </table>
-
-        <div id="freq-print-area"></div>
+        <div id="freq-print-area" class="hidden-screen"></div>
       </div>
     </div>
 
@@ -207,17 +143,14 @@
 
     <div id="tab-lab" class="tab-view hidden">
       <h3>🖥️ Laboratório</h3>
-      <p class="no-print">Clique em um PC para alterar o status (Livre, Reservado ou Manutenção).</p>
       <div class="pc-grid no-print" id="pc-grid-view"></div>
       <div id="pc-edit-card" class="card glass hidden no-print" style="margin-top: 20px;">
         <h4 id="pc-title-edit">Configurar PC</h4>
-        <label>Informações / Quem Reservou:</label>
-        <textarea id="pc-info-text"></textarea>
-        <label>Status da Máquina:</label>
+        <textarea id="pc-info-text" placeholder="Observações..."></textarea>
         <select id="pc-status-sel">
-          <option value="free">Livre / Disponível</option>
-          <option value="busy">Reservado / Em Uso</option>
-          <option value="maint">Manutenção / Defeito</option>
+          <option value="free">Livre</option>
+          <option value="busy">Reservado</option>
+          <option value="maint">Manutenção</option>
         </select>
         <button class="btn btn-primary" onclick="salvarPC()">SALVAR STATUS</button>
       </div>
@@ -225,10 +158,7 @@
 
     <div id="tab-formados" class="tab-view hidden">
       <div class="card glass">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3>🎓 Relatório de Formados</h3>
-          <button class="btn btn-pdf no-print" onclick="window.print()">📥 Baixar PDF / Imprimir</button>
-        </div>
+        <h3>🎓 Alunos Formados</h3>
         <table>
           <thead><tr><th>Nome</th><th>Curso</th><th class="no-print">Ações</th></tr></thead>
           <tbody id="list-formados"></tbody>
@@ -238,25 +168,23 @@
 
     <div id="tab-config" class="tab-view hidden">
       <div class="card glass">
-        <h3>👥 Funcionários</h3>
+        <h3>📢 Mural do Dashboard</h3>
         <div style="display: flex; gap: 10px;">
-          <input type="text" id="f-user" placeholder="Login">
-          <input type="text" id="f-pass" placeholder="Senha">
-          <select id="f-role"><option value="professor">Professor</option><option value="secretaria">Secretaria</option></select>
-          <button class="btn btn-primary" onclick="addFuncionario()">ADICIONAR</button>
+          <input type="text" id="edit-mural-input" placeholder="Mensagem...">
+          <button class="btn btn-primary" onclick="atualizarMural()">OK</button>
         </div>
-        <table style="margin-top: 15px;">
-          <thead><tr><th>Usuário</th><th>Senha</th><th>Cargo</th><th>Ação</th></tr></thead>
-          <tbody id="list-func"></tbody>
-        </table>
       </div>
       <div class="card glass">
-        <h3>📚 Vitrine de Cursos</h3>
-        <div style="display: flex; gap: 10px;">
-          <input type="text" id="new-course" placeholder="Nome do Curso">
-          <button class="btn btn-primary" onclick="addCourseVitrine()">CADASTRAR</button>
+        <h3>👥 Adicionar Funcionário</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <input type="text" id="f-user" placeholder="Login">
+          <input type="text" id="f-pass" placeholder="Senha">
+          <select id="f-role" style="width: auto;"><option value="professor">Professor</option><option value="secretaria">Secretaria</option></select>
+          <button class="btn btn-primary" onclick="addFuncionario()">ADICIONAR</button>
         </div>
-        <div id="vitrine-edit-list" style="margin-top: 15px;"></div>
+        <table style="margin-top:15px">
+           <tbody id="list-func"></tbody>
+        </table>
       </div>
     </div>
 
@@ -264,42 +192,79 @@
       <div class="card glass">
         <h2 id="al-nome-display">---</h2>
         <h4 id="al-curso-display">---</h4>
-        <h4 id="al-nota-display" style="color: var(--primary);">NOTA: 0.0</h4>
+        <h3 id="al-nota-display" style="color: var(--primary);">NOTA: 0.0</h3>
         <hr>
         <div id="al-freq-display"></div>
       </div>
     </div>
 
     <div id="tab-senha" class="tab-view hidden">
-      <div class="card glass" style="max-width: 400px; margin: 0 auto;">
-        <h3>🔐 Alterar Minha Senha</h3>
-        <input type="password" id="pw-atual" placeholder="Senha Atual">
-        <input type="password" id="pw-nova" placeholder="Nova Senha">
-        <input type="password" id="pw-confirma" placeholder="Confirme a Nova Senha">
-        <button class="btn btn-primary" style="width: 100%;" onclick="alterarSenhaPropria()">ATUALIZAR SENHA</button>
-      </div>
+       <div class="card glass" style="max-width: 400px; margin: auto;">
+          <h3>🔐 Alterar Senha</h3>
+          <input type="password" id="pw-atual" placeholder="Senha Atual">
+          <input type="password" id="pw-nova" placeholder="Nova Senha">
+          <button class="btn btn-primary" style="width: 100%;" onclick="alterarSenhaPropria()">ATUALIZAR</button>
+       </div>
     </div>
 
   </main>
 </div>
 
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBI01H_Xbqbm3ogcVyflIQxiy1oBbF4AYE",
+    authDomain: "labinfo-70a86.firebaseapp.com",
+    projectId: "labinfo-70a86",
+    storageBucket: "labinfo-70a86.firebasestorage.app",
+    messagingSenderId: "112710301950",
+    appId: "1:112710301950:web:25cc1c0e053c51b5268daf",
+    measurementId: "G-2BZSPPSF32"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const rtdb = getDatabase(app);
+  const dbRef = ref(rtdb, 'labinfo_data');
+
   const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-  let db = JSON.parse(localStorage.getItem('labinfo_v6_pdf')) || {
+  let db = {
     admin: { user: 'admin', pass: '123' },
     funcionarios: [], alunos: [], formados: [], vitrine: ['Informática'],
     pcs: Array.from({length: 8}, (_, i) => ({id: i+1, status: 'free', info: 'OK'})),
-    mural: 'LabInfo OS - Pronto para gerenciar e reservar PCs!'
+    mural: 'LabInfo OS - Sincronizado'
   };
 
   let sessao = null;
   let pcAtivoId = null;
 
-  function autenticar() {
+  // Sincronização
+  onValue(dbRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      db = data;
+      if (sessao) {
+        renderizarGeral();
+        if (!document.getElementById('tab-frequencia').classList.contains('hidden')) renderFreq();
+        if (!document.getElementById('tab-aluno').classList.contains('hidden')) renderPortalAluno();
+      }
+    }
+  });
+
+  function salvar() { set(dbRef, db); }
+
+  // Funções Globais
+  window.autenticar = function() {
     const u = document.getElementById('l-user').value, p = document.getElementById('l-pass').value, r = document.getElementById('l-role').value;
     if(r === 'admin' && u === db.admin.user && p === db.admin.pass) logar('admin', db.admin);
-    else if(r === 'aluno') { const a = db.alunos.find(x => x.user === u && x.pass === p); if(a) logar('aluno', a); else alert("Usuário ou Senha incorretos!"); }
-    else { const f = db.funcionarios.find(x => x.user === u && x.pass === p && x.role === r); if(f) logar(r, f); else alert("Dados inválidos!"); }
+    else if(r === 'aluno') { 
+        const a = (db.alunos || []).find(x => x.user === u && x.pass === p); 
+        if(a) logar('aluno', a); else alert("Login inválido!"); 
+    } else { 
+        const f = (db.funcionarios || []).find(x => x.user === u && x.pass === p && x.role === r); 
+        if(f) logar(r, f); else alert("Login inválido!"); 
+    }
   }
 
   function logar(role, dados) {
@@ -307,7 +272,6 @@
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('display-user').innerText = (dados.nome || dados.user).toUpperCase();
     montarMenu(); showTab('tab-dash'); renderizarGeral();
-    document.getElementById('edit-mural-input').value = db.mural;
   }
 
   function montarMenu() {
@@ -315,115 +279,17 @@
     let h = `<div class="menu-item active" onclick="showTab('tab-dash')">Dashboard</div>`;
     if(sessao.role !== 'aluno') {
       h += `<div class="menu-item" onclick="showTab('tab-matricula')">Matrículas</div>`;
-      h += `<div class="menu-item" onclick="showTab('tab-frequencia')">Frequência e Notas</div>`;
+      h += `<div class="menu-item" onclick="showTab('tab-frequencia')">Frequência</div>`;
       h += `<div class="menu-item" onclick="showTab('tab-lab')">Laboratório</div>`;
       h += `<div class="menu-item" onclick="showTab('tab-formados')">Formados</div>`;
     }
-    if(sessao.role === 'admin') h += `<div class="menu-item" onclick="showTab('tab-config')">Configurações</div>`;
-    if(sessao.role === 'aluno') h += `<div class="menu-item" onclick="showTab('tab-aluno')">Meu Boletim</div>`;
+    if(sessao.role === 'admin') h += `<div class="menu-item" onclick="showTab('tab-config')">Configuração</div>`;
+    if(sessao.role === 'aluno') h += `<div class="menu-item" onclick="showTab('tab-aluno')">Boletim</div>`;
     h += `<div class="menu-item" onclick="showTab('tab-senha')">Segurança</div>`;
     m.innerHTML = h;
   }
 
-  function atualizarMural() {
-    const novoTexto = document.getElementById('edit-mural-input').value;
-    if(novoTexto.trim() !== "") {
-      db.mural = novoTexto;
-      salvar(); renderizarGeral();
-      alert("Mural atualizado!");
-    }
-  }
-
-  function cadastrarAluno() {
-    const nome = document.getElementById('m-nome').value, curso = document.getElementById('m-curso').value,
-      user = document.getElementById('m-user').value, pass = document.getElementById('m-pass').value,
-      tel = document.getElementById('m-tel').value, resp = document.getElementById('m-resp').value,
-      endereco = document.getElementById('m-end').value;
-    if(!nome || !user) return;
-    // Adicionado campo 'nota' no objeto aluno
-    db.alunos.push({ id: Date.now(), nome, curso, user, pass, tel, resp, endereco, nota: 0, freq: Array(12).fill().map(() => Array(4).fill('P')) });
-    salvar(); renderizarGeral();
-    ['m-nome','m-curso','m-user','m-tel','m-resp','m-end'].forEach(id => document.getElementById(id).value = "");
-  }
-
-  function altNota(aid, val) {
-    const a = db.alunos.find(x => x.id === aid);
-    if(a) { a.nota = val; salvar(); }
-  }
-
-  function renderizarGeral() {
-    document.getElementById('st-alunos').innerText = db.alunos.length;
-    document.getElementById('st-pcs').innerText = db.pcs.filter(p=>p.status==='free').length + '/8';
-    document.getElementById('st-form').innerText = db.formados.length;
-    document.getElementById('mural-view').innerText = db.mural;
-
-    document.getElementById('vitrine-area').innerHTML = db.vitrine.map(c => `<div style="background:var(--primary); color:#000; padding:5px 12px; border-radius:20px; font-size:0.8rem; font-weight:bold">${c}</div>`).join('');
-    document.getElementById('vitrine-edit-list').innerHTML = db.vitrine.map((c, i) => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #1e293b"><span>${c}</span><button class="btn-danger" onclick="delCurso(${i})">X</button></div>`).join('');
-
-    document.getElementById('list-alunos').innerHTML = db.alunos.map(a => `
-                <tr>
-                    <td>${a.nome}</td><td>${a.curso}</td><td>${a.tel}</td><td>${a.resp}</td>
-                    <td><b>${a.nota || 0}</b></td>
-                    <td class="no-print"><small>${a.user} / ${a.pass}</small></td>
-                    <td class="no-print">
-                        <button class="btn-primary" onclick="formarAluno(${a.id})">Formar</button>
-                        <button class="btn-danger" onclick="excluirAluno(${a.id})">X</button>
-                    </td>
-                </tr>`).join('');
-
-    // Prepara a área de impressão de frequência (invisível na tela, visível no PDF)
-    document.getElementById('freq-print-area').innerHTML = db.alunos.map(a => `
-        <div class="card" style="margin-top:20px; border:1px solid #000;">
-            <h4>Frequência Detalhada: ${a.nome} (Nota: ${a.nota || 0})</h4>
-            <div class="freq-row">${a.freq.map((m, im) => `
-                <div class="month-box"><small>${MESES[im]}</small><br>
-                ${m.map(s => `<div class="wk-btn ${s.toLowerCase()}-bg">${s}</div>`).join('')}
-                </div>`).join('')}
-            </div>
-        </div>
-    `).join('');
-
-    document.getElementById('list-func').innerHTML = db.funcionarios.map(f => `<tr><td>${f.user}</td><td>${f.pass}</td><td>${f.role}</td><td><button class="btn-danger" onclick="delFunc('${f.user}')">X</button></td></tr>`).join('');
-    document.getElementById('list-formados').innerHTML = db.formados.map(a => `<tr><td>${a.nome}</td><td>${a.curso}</td><td class="no-print"><button class="btn-primary" onclick="reativar(${a.id})">Reativar</button> <button class="btn-danger" onclick="excluirFormado(${a.id})">X</button></td></tr>`).join('');
-    renderPCs();
-  }
-
-  function renderPCs() {
-    document.getElementById('pc-grid-view').innerHTML = db.pcs.map(p => `
-                <div class="pc-item ${p.status}" onclick="abrirPC(${p.id})">
-                    <b>PC 0${p.id}</b><br>
-                    <small>${p.status === 'free' ? 'LIVRE' : p.status === 'busy' ? 'RESERVADO' : 'MANUTENÇÃO'}</small>
-                </div>`).join('');
-  }
-
-  function abrirPC(id) {
-    if(sessao.role === 'aluno') return;
-    pcAtivoId = id;
-    const pc = db.pcs.find(x => x.id === id);
-    document.getElementById('pc-edit-card').classList.remove('hidden');
-    document.getElementById('pc-info-text').value = pc.info;
-    document.getElementById('pc-status-sel').value = pc.status;
-    document.getElementById('pc-title-edit').innerText = "Configurar PC 0" + id;
-  }
-
-  function salvarPC() {
-    const pc = db.pcs.find(x => x.id === pcAtivoId);
-    pc.info = document.getElementById('pc-info-text').value;
-    pc.status = document.getElementById('pc-status-sel').value;
-    salvar(); renderizarGeral();
-    document.getElementById('pc-edit-card').classList.add('hidden');
-  }
-
-  function addFuncionario() { const u = document.getElementById('f-user').value, p = document.getElementById('f-pass').value, r = document.getElementById('f-role').value; if(u && p) { db.funcionarios.push({user: u, pass: p, role: r}); salvar(); renderizarGeral(); } }
-  function addCourseVitrine() { const c = document.getElementById('new-course').value; if(c) { db.vitrine.push(c); salvar(); renderizarGeral(); } }
-  function delCurso(i) { db.vitrine.splice(i, 1); salvar(); renderizarGeral(); }
-  function delFunc(u) { db.funcionarios = db.funcionarios.filter(x=>x.user!==u); salvar(); renderizarGeral(); }
-  function excluirAluno(id) { db.alunos = db.alunos.filter(x=>x.id!==id); salvar(); renderizarGeral(); }
-  function excluirFormado(id) { db.formados = db.formados.filter(x=>x.id!==id); salvar(); renderizarGeral(); }
-  function formarAluno(id) { const idx = db.alunos.findIndex(x => x.id === id); const a = db.alunos.splice(idx, 1)[0]; db.formados.push(a); salvar(); renderizarGeral(); }
-  function reativar(id) { const idx = db.formados.findIndex(x => x.id === id); const a = db.formados.splice(idx, 1)[0]; db.alunos.push(a); salvar(); renderizarGeral(); }
-
-  function showTab(id) {
+  window.showTab = function(id) {
     document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
     document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
     document.getElementById(id).classList.remove('hidden');
@@ -431,44 +297,109 @@
     if(id === 'tab-aluno') renderPortalAluno();
   }
 
-  function renderFreq() {
-    document.getElementById('freq-area').innerHTML = db.alunos.map(a => `
-        <div class="card glass">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <b>${a.nome}</b>
-                <div>Nota: <input type="number" step="0.1" value="${a.nota || 0}" style="width:70px; display:inline;" onchange="altNota(${a.id}, this.value)"></div>
-            </div>
-            <div class="freq-row">${a.freq.map((m, im) => `
-                <div class="month-box"><small>${MESES[im]}</small><br>
-                ${m.map((s, is) => `<div class="wk-btn ${s.toLowerCase()}-bg" onclick="altF(${a.id},${im},${is})">${s}</div>`).join('')}
-                </div>`).join('')}
-            </div>
-        </div>`).join('');
+  window.cadastrarAluno = function() {
+    const n = document.getElementById('m-nome').value, c = document.getElementById('m-curso').value, u = document.getElementById('m-user').value;
+    if(!n || !u) return;
+    if(!db.alunos) db.alunos = [];
+    db.alunos.push({ 
+        id: Date.now(), nome: n, curso: c, user: u, pass: document.getElementById('m-pass').value,
+        tel: document.getElementById('m-tel').value, nota: 0, 
+        freq: Array(12).fill().map(() => Array(4).fill('P')) 
+    });
+    salvar(); renderizarGeral();
+    alert("Cadastrado!");
   }
 
-  function altF(aid, im, is) { const a = db.alunos.find(x => x.id === aid); const c = {'P':'F', 'F':'FJ', 'FJ':'P'}; a.freq[im][is] = c[a.freq[im][is]]; salvar(); renderFreq(); renderizarGeral(); }
+  window.renderizarGeral = function() {
+    document.getElementById('st-alunos').innerText = (db.alunos || []).length;
+    document.getElementById('st-pcs').innerText = (db.pcs || []).filter(p=>p.status==='free').length + '/8';
+    document.getElementById('st-form').innerText = (db.formados || []).length;
+    document.getElementById('mural-view').innerText = db.mural || "---";
 
-  function renderPortalAluno() {
-    const a = db.alunos.find(x => x.user === sessao.user); if(!a) return;
+    document.getElementById('list-alunos').innerHTML = (db.alunos || []).map(a => `
+      <tr><td>${a.nome}</td><td>${a.curso}</td><td>${a.tel}</td><td><b>${a.nota}</b></td>
+      <td class="no-print">
+        <button class="btn btn-primary" onclick="formarAluno(${a.id})">🎓</button>
+        <button class="btn btn-danger" onclick="excluirAluno(${a.id})">X</button>
+      </td></tr>`).join('');
+
+    document.getElementById('list-formados').innerHTML = (db.formados || []).map(a => `
+      <tr><td>${a.nome}</td><td>${a.curso}</td><td class="no-print"><button class="btn btn-primary" onclick="reativar(${a.id})">Reativar</button></td></tr>`).join('');
+    
+    document.getElementById('list-func').innerHTML = (db.funcionarios || []).map(f => `
+      <tr><td>${f.user} (${f.role})</td><td><button class="btn btn-danger" onclick="delFunc('${f.user}')">X</button></td></tr>`).join('');
+    
+    renderPCs();
+  }
+
+  function renderPCs() {
+    document.getElementById('pc-grid-view').innerHTML = db.pcs.map(p => `
+      <div class="pc-item ${p.status}" onclick="abrirPC(${p.id})"><b>PC 0${p.id}</b><br><small>${p.status}</small></div>`).join('');
+  }
+
+  window.abrirPC = function(id) {
+    if(sessao.role === 'aluno') return;
+    pcAtivoId = id;
+    const pc = db.pcs.find(x => x.id === id);
+    document.getElementById('pc-edit-card').classList.remove('hidden');
+    document.getElementById('pc-info-text').value = pc.info;
+    document.getElementById('pc-status-sel').value = pc.status;
+  }
+
+  window.salvarPC = function() {
+    const pc = db.pcs.find(x => x.id === pcAtivoId);
+    pc.info = document.getElementById('pc-info-text').value;
+    pc.status = document.getElementById('pc-status-sel').value;
+    salvar(); document.getElementById('pc-edit-card').classList.add('hidden');
+  }
+
+  window.renderFreq = function() {
+    document.getElementById('freq-area').innerHTML = (db.alunos || []).map(a => `
+      <div class="card glass"><b>${a.nome}</b> | Nota: <input type="number" step="0.1" value="${a.nota}" style="width:60px; display:inline;" onchange="altNota(${a.id}, this.value)">
+      <div class="freq-row">${a.freq.map((m, im) => `
+        <div class="month-box"><small>${MESES[im]}</small><br>
+        ${m.map((s, is) => `<div class="wk-btn ${s.toLowerCase()}-bg" onclick="altF(${a.id},${im},${is})">${s}</div>`).join('')}
+        </div>`).join('')}</div></div>`).join('');
+  }
+
+  window.altNota = function(aid, val) { const a = db.alunos.find(x=>x.id===aid); a.nota = val; salvar(); }
+  window.altF = function(aid, im, is) { 
+    const a = db.alunos.find(x=>x.id===aid); 
+    const c = {'P':'F', 'F':'FJ', 'FJ':'P'}; 
+    a.freq[im][is] = c[a.freq[im][is]]; 
+    salvar(); renderFreq(); 
+  }
+
+  window.renderPortalAluno = function() {
+    const a = (db.alunos || []).find(x => x.user === sessao.user); if(!a) return;
     document.getElementById('al-nome-display').innerText = a.nome;
-    document.getElementById('al-curso-display').innerText = "CURSO: " + a.curso;
-    document.getElementById('al-nota-display').innerText = "NOTA: " + (a.nota || 0);
+    document.getElementById('al-curso-display').innerText = a.curso;
+    document.getElementById('al-nota-display').innerText = "NOTA: " + a.nota;
     document.getElementById('al-freq-display').innerHTML = `<div class="freq-row">${a.freq.map((m, im) => `<div class="month-box"><small>${MESES[im]}</small><br>${m.map(s => `<div class="wk-btn ${s.toLowerCase()}-bg">${s}</div>`).join('')}</div>`).join('')}</div>`;
   }
 
-  function alterarSenhaPropria() {
-    const atual = document.getElementById('pw-atual').value;
-    const nova = document.getElementById('pw-nova').value;
-    const confirma = document.getElementById('pw-confirma').value;
-    if(nova !== confirma) { alert("Senhas não coincidem!"); return; }
-    let alterado = false;
-    if(sessao.role === 'admin') { if(atual === db.admin.pass) { db.admin.pass = nova; alterado = true; } }
-    else if(sessao.role === 'aluno') { const a = db.alunos.find(x => x.id === sessao.id); if(a && atual === a.pass) { a.pass = nova; alterado = true; } }
-    else { const f = db.funcionarios.find(x => x.user === sessao.user); if(f && atual === f.pass) { f.pass = nova; alterado = true; } }
-    if(alterado) { salvar(); alert("Senha alterada!"); location.reload(); } else alert("Senha atual incorreta.");
+  window.formarAluno = function(id) { 
+    const i = db.alunos.findIndex(x=>x.id===id); 
+    if(!db.formados) db.formados = [];
+    db.formados.push(db.alunos.splice(i, 1)[0]); 
+    salvar(); renderizarGeral(); 
+  }
+  
+  window.excluirAluno = function(id) { if(confirm("Excluir?")) { db.alunos = db.alunos.filter(x=>x.id!==id); salvar(); renderizarGeral(); } }
+  window.reativar = function(id) { const i = db.formados.findIndex(x=>x.id===id); db.alunos.push(db.formados.splice(i, 1)[0]); salvar(); renderizarGeral(); }
+  window.atualizarMural = function() { db.mural = document.getElementById('edit-mural-input').value; salvar(); renderizarGeral(); }
+  window.addFuncionario = function() { 
+    const u = document.getElementById('f-user').value, p = document.getElementById('f-pass').value, r = document.getElementById('f-role').value;
+    if(u&&p){ if(!db.funcionarios) db.funcionarios=[]; db.funcionarios.push({user:u, pass:p, role:r}); salvar(); renderizarGeral(); }
+  }
+  window.delFunc = function(u) { db.funcionarios = db.funcionarios.filter(x=>x.user!==u); salvar(); renderizarGeral(); }
+  
+  window.alterarSenhaPropria = function() {
+    const a = document.getElementById('pw-atual').value, n = document.getElementById('pw-nova').value;
+    if(sessao.role==='admin' && a===db.admin.pass){ db.admin.pass=n; salvar(); alert("OK"); }
+    else alert("Senha atual incorreta");
   }
 
-  function salvar() { localStorage.setItem('labinfo_v6_pdf', JSON.stringify(db)); }
 </script>
 </body>
 </html>
