@@ -132,7 +132,6 @@
           </thead>
           <tbody id="list-alunos"></tbody>
         </table>
-        <div id="freq-print-area" class="hidden-screen"></div>
       </div>
     </div>
 
@@ -217,6 +216,7 @@
   const firebaseConfig = {
     apiKey: "AIzaSyBI01H_Xbqbm3ogcVyflIQxiy1oBbF4AYE",
     authDomain: "labinfo-70a86.firebaseapp.com",
+    databaseURL: "https://labinfo-70a86-default-rtdb.firebaseio.com/", // Link do seu Banco
     projectId: "labinfo-70a86",
     storageBucket: "labinfo-70a86.firebasestorage.app",
     messagingSenderId: "112710301950",
@@ -239,11 +239,16 @@
   let sessao = null;
   let pcAtivoId = null;
 
-  // Sincronização
+  // Escuta mudanças na nuvem
   onValue(dbRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
       db = data;
+      // Garante que arrays existam
+      if(!db.alunos) db.alunos = [];
+      if(!db.funcionarios) db.funcionarios = [];
+      if(!db.formados) db.formados = [];
+      
       if (sessao) {
         renderizarGeral();
         if (!document.getElementById('tab-frequencia').classList.contains('hidden')) renderFreq();
@@ -254,7 +259,6 @@
 
   function salvar() { set(dbRef, db); }
 
-  // Funções Globais
   window.autenticar = function() {
     const u = document.getElementById('l-user').value, p = document.getElementById('l-pass').value, r = document.getElementById('l-role').value;
     if(r === 'admin' && u === db.admin.user && p === db.admin.pass) logar('admin', db.admin);
@@ -307,7 +311,7 @@
         freq: Array(12).fill().map(() => Array(4).fill('P')) 
     });
     salvar(); renderizarGeral();
-    alert("Cadastrado!");
+    alert("Cadastrado com Sucesso!");
   }
 
   window.renderizarGeral = function() {
@@ -385,9 +389,10 @@
     salvar(); renderizarGeral(); 
   }
   
-  window.excluirAluno = function(id) { if(confirm("Excluir?")) { db.alunos = db.alunos.filter(x=>x.id!==id); salvar(); renderizarGeral(); } }
+  window.excluirAluno = function(id) { if(confirm("Excluir Aluno Permanentemente?")) { db.alunos = db.alunos.filter(x=>x.id!==id); salvar(); renderizarGeral(); } }
   window.reativar = function(id) { const i = db.formados.findIndex(x=>x.id===id); db.alunos.push(db.formados.splice(i, 1)[0]); salvar(); renderizarGeral(); }
   window.atualizarMural = function() { db.mural = document.getElementById('edit-mural-input').value; salvar(); renderizarGeral(); }
+  
   window.addFuncionario = function() { 
     const u = document.getElementById('f-user').value, p = document.getElementById('f-pass').value, r = document.getElementById('f-role').value;
     if(u&&p){ if(!db.funcionarios) db.funcionarios=[]; db.funcionarios.push({user:u, pass:p, role:r}); salvar(); renderizarGeral(); }
@@ -396,12 +401,10 @@
   
   window.alterarSenhaPropria = function() {
     const a = document.getElementById('pw-atual').value, n = document.getElementById('pw-nova').value;
-    if(sessao.role==='admin' && a===db.admin.pass){ db.admin.pass=n; salvar(); alert("OK"); }
+    if(sessao.role==='admin' && a===db.admin.pass){ db.admin.pass=n; salvar(); alert("Senha alterada!"); }
     else alert("Senha atual incorreta");
   }
 
 </script>
-</body>
-</html>
 </body>
 </html>
